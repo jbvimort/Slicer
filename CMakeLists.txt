@@ -295,6 +295,10 @@ option(Slicer_USE_CTKAPPLAUNCHER "Configure ctkAppLauncher." ON)
 mark_as_advanced(Slicer_USE_CTKAPPLAUNCHER)
 mark_as_superbuild(Slicer_USE_CTKAPPLAUNCHER)
 
+option(Slicer_USE_OpenVR "" OFF)
+mark_as_advanced(Slicer_USE_OpenVR)
+mark_as_superbuild(Slicer_USE_OpenVR)
+
 option(Slicer_USE_QtTesting    "Integrate QtTesting framework into Slicer." ON)
 mark_as_advanced(Slicer_USE_QtTesting)
 mark_as_superbuild(Slicer_USE_QtTesting)

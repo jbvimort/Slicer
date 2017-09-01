@@ -26,6 +26,7 @@
 #include "qSlicerNodeWriter.h"
 #include "vtkMRMLThreeDViewDisplayableManagerFactory.h"
 #include "vtkMRMLSliceViewDisplayableManagerFactory.h"
+//#include "vtkMRMLVRViewDisplayableManagerFactory.h"
 
 // Segmentations includes
 #include "qSlicerSegmentationsModule.h"
@@ -163,6 +164,7 @@ void qSlicerSegmentationsModule::setup()
   vtkSmartPointer<vtkMRMLSegmentationsDisplayableManager2D> dm2d = vtkSmartPointer<vtkMRMLSegmentationsDisplayableManager2D>::New();
   // Register displayable managers
   vtkMRMLThreeDViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager("vtkMRMLSegmentationsDisplayableManager3D");
+//  vtkMRMLVRViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager("vtkMRMLSegmentationsDisplayableManager3D");
   vtkMRMLSliceViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager("vtkMRMLSegmentationsDisplayableManager2D");
 
   // Register default segment editor effects

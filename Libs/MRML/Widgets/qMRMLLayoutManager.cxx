@@ -23,7 +23,7 @@
 #include <QDebug>
 
 // MRMLWidgets includes
-#include "qMRMLLayoutManager_p.h"
+#include <qMRMLLayoutManager_p.h>
 #include <qMRMLSliceWidget.h>
 #include <qMRMLSliceControllerWidget.h>
 #include <qMRMLChartView.h>
@@ -31,6 +31,7 @@
 #include <qMRMLTableView.h>
 #include <qMRMLTableWidget.h>
 #include <qMRMLThreeDView.h>
+//#include <qMRMLVRView.h>
 #include <qMRMLThreeDWidget.h>
 
 // MRMLLogic includes

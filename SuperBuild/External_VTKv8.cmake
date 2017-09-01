@@ -6,6 +6,9 @@ set(${proj}_DEPENDENCIES "zlib")
 if (Slicer_USE_PYTHONQT)
   list(APPEND ${proj}_DEPENDENCIES python)
 endif()
+if(Slicer_USE_OpenVR)
+  list(APPEND ${proj}_DEPENDENCIES OpenVR)
+endif()
 
 # Include dependent projects if any
 ExternalProject_Include_Dependencies(${proj} PROJECT_VAR proj DEPENDS_VAR ${proj}_DEPENDENCIES)
@@ -54,12 +57,15 @@ if((NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR) AND NOT ${CMAKE_PROJECT_N
     list(APPEND EXTERNAL_PROJECT_OPTIONAL_ARGS
       -DVTK_QT_VERSION:STRING=4
       -DVTK_USE_QT:BOOL=ON
+      -DModule_vtkRenderingOpenVR:BOOL=OFF
       -DQT_QMAKE_EXECUTABLE:FILEPATH=${QT_QMAKE_EXECUTABLE}
       )
   else()
     list(APPEND EXTERNAL_PROJECT_OPTIONAL_ARGS
       -DVTK_QT_VERSION:STRING=5
-      -DVTK_Group_Qt:BOOL=ON
+      -DVTK_Group_Qt:BOOL=${Slicer_USE_OpenVR}
+      -DModule_vtkRenderingOpenVR:BOOL=${Slicer_USE_OpenVR}
+      -DVTK_OPENVR_OBJECT_FACTORY:BOOL=OFF
       -DQt5_DIR:FILEPATH=${Qt5_DIR}
       )
   endif()
@@ -67,6 +73,12 @@ if((NOT DEFINED VTK_DIR OR NOT DEFINED VTK_SOURCE_DIR) AND NOT ${CMAKE_PROJECT_N
     list(APPEND EXTERNAL_PROJECT_OPTIONAL_ARGS
       -DModule_vtkGUISupportQtOpenGL:BOOL=ON
     )
+  endif()
+  if(Slicer_USE_OpenVR)
+    list(APPEND EXTERNAL_PROJECT_OPTIONAL_ARGS
+      -DOPENVR_INCLUDE_DIR:BOOL=${OPENVR_INCLUDE_DIR}
+      -DOPENVR_LIBRARY:BOOL=${OPENVR_LIBRARY}
+      )
   endif()
   if(APPLE)
     list(APPEND EXTERNAL_PROJECT_OPTIONAL_ARGS

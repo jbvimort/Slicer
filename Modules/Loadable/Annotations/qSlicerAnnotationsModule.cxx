@@ -1,7 +1,8 @@
 
 // MRMLDisplayableManager includes
-#include <vtkMRMLThreeDViewDisplayableManagerFactory.h>
 #include <vtkMRMLSliceViewDisplayableManagerFactory.h>
+#include <vtkMRMLThreeDViewDisplayableManagerFactory.h>
+//#include <vtkMRMLVRViewDisplayableManagerFactory.h>
 
 // QTGUI includes
 #include <qSlicerApplication.h>
@@ -69,6 +70,8 @@ void qSlicerAnnotationsModule::setup()
     {
     vtkMRMLThreeDViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager(
         QString("vtkMRMLAnnotation%1DisplayableManager").arg(name).toLatin1());
+//    vtkMRMLVRViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager(
+//      QString("vtkMRMLAnnotation%1DisplayableManager").arg(name).toLatin1());
     }
 
   // 2D
