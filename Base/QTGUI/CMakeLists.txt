@@ -95,6 +95,10 @@ set(KIT_SRCS
   qSlicerWebWidget.h
   qSlicerWidget.cxx
   qSlicerWidget.h
+
+  qMRMLVRView.cxx
+  qMRMLVRView.h
+  qMRMLVRView_p.h
   )
 
 if(Slicer_BUILD_EXTENSIONMANAGER_SUPPORT)
@@ -194,6 +198,9 @@ set(KIT_MOC_SRCS
   qSlicerViewersToolBar_p.h
   qSlicerWebWidget.h
   qSlicerWidget.h
+
+  qMRMLVRView.h
+  qMRMLVRView_p.h
   )
 
 if(Slicer_BUILD_EXTENSIONMANAGER_SUPPORT)

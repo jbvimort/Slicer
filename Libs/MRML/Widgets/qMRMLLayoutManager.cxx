@@ -23,7 +23,7 @@
 #include <QDebug>
 
 // MRMLWidgets includes
-#include "qMRMLLayoutManager_p.h"
+#include <qMRMLLayoutManager_p.h>
 #include <qMRMLSliceWidget.h>
 #include <qMRMLSliceControllerWidget.h>
 #include <qMRMLChartView.h>
@@ -31,6 +31,7 @@
 #include <qMRMLTableView.h>
 #include <qMRMLTableWidget.h>
 #include <qMRMLThreeDView.h>
+//#include <qMRMLVRView.h>
 #include <qMRMLThreeDWidget.h>
 
 // MRMLLogic includes
@@ -44,6 +45,7 @@
 #include <vtkMRMLScene.h>
 #include <vtkMRMLTableViewNode.h>
 #include <vtkMRMLViewNode.h>
+#include <vtkMRMLVRViewNode.h>
 
 // VTK includes
 #include <vtkCollection.h>
@@ -84,6 +86,40 @@ QWidget* qMRMLLayoutThreeDViewFactory
   threeDWidget->setMRMLViewNode(threeDViewNode);
   return threeDWidget;
 }
+
+////------------------------------------------------------------------------------
+//qMRMLLayoutVRViewFactory::qMRMLLayoutVRViewFactory(QObject* parent)
+//	: qMRMLLayoutViewFactory(parent)
+//{
+//}
+//
+////------------------------------------------------------------------------------
+//QString qMRMLLayoutVRViewFactory::viewClassName()const
+//{
+//	return "vtkMRMLVRViewNode";
+//}
+//
+////------------------------------------------------------------------------------
+//QWidget* qMRMLLayoutVRViewFactory
+//::createViewFromNode(vtkMRMLAbstractViewNode* viewNode)
+//{
+//	if (!viewNode || !this->layoutManager() || !this->layoutManager()->viewport())
+//	{
+//		Q_ASSERT(viewNode);
+//		return 0;
+//	}
+//
+//	// There must be a unique VRWidget per node
+//	Q_ASSERT(!this->viewWidget(viewNode));
+//
+//	qMRMLVRView* VRWidget = new qMRMLVRView(this->layoutManager()->viewport());
+//	VRWidget->setObjectName(QString("VRWidget%1").arg(viewNode->GetLayoutLabel()));
+//	//VRWidget->setViewLabel(viewNode->GetLayoutLabel());
+//	VRWidget->setMRMLScene(this->mrmlScene());
+//	vtkMRMLVRViewNode* vrViewNode = vtkMRMLVRViewNode::SafeDownCast(viewNode);
+//	VRWidget->setMRMLVRViewNode(vrViewNode);
+//	return VRWidget;
+//}
 
 //------------------------------------------------------------------------------
 qMRMLLayoutChartViewFactory::qMRMLLayoutChartViewFactory(QObject* parent)
@@ -294,6 +330,7 @@ qMRMLLayoutManagerPrivate::qMRMLLayoutManagerPrivate(qMRMLLayoutManager& object)
   this->MRMLLayoutNode = 0;
   this->MRMLLayoutLogic = vtkMRMLLayoutLogic::New();
   this->ActiveMRMLThreeDViewNode = 0;
+  this->ActiveMRMLVRViewNode = 0;
   this->ActiveMRMLChartViewNode = 0;
   this->ActiveMRMLTableViewNode = 0;
   //this->SavedCurrentViewArrangement = vtkMRMLLayoutNode::SlicerLayoutNone;
@@ -317,6 +354,10 @@ void qMRMLLayoutManagerPrivate::init()
     new qMRMLLayoutThreeDViewFactory;
   q->registerViewFactory(threeDViewFactory);
 
+  //qMRMLLayoutVRViewFactory* vrViewFactory =
+  // new qMRMLLayoutVRViewFactory;
+  //q->registerViewFactory(vrViewFactory);
+
   qMRMLLayoutSliceViewFactory* sliceViewFactory =
     new qMRMLLayoutSliceViewFactory;
   q->registerViewFactory(sliceViewFactory);
@@ -337,6 +378,14 @@ qMRMLThreeDWidget* qMRMLLayoutManagerPrivate::threeDWidget(vtkMRMLViewNode* node
   return qobject_cast<qMRMLThreeDWidget*>(
         q->mrmlViewFactory("vtkMRMLViewNode")->viewWidget(node));
 }
+
+////------------------------------------------------------------------------------
+//qMRMLVRView* qMRMLLayoutManagerPrivate::vrView(vtkMRMLVRViewNode* node)const
+//{
+//  Q_Q(const qMRMLLayoutManager);
+//  return qobject_cast<qMRMLVRView*>(
+//    q->mrmlViewFactory("vtkMRMLVRViewNode")->viewWidget(node));
+//}
 
 //------------------------------------------------------------------------------
 qMRMLChartWidget* qMRMLLayoutManagerPrivate::chartWidget(vtkMRMLChartViewNode* node)const
@@ -409,6 +458,10 @@ QWidget* qMRMLLayoutManagerPrivate::viewWidget(vtkMRMLNode* viewNode)const
     {
     widget = this->tableWidget(vtkMRMLTableViewNode::SafeDownCast(viewNode));
     }
+  //if (vtkMRMLVRViewNode::SafeDownCast(viewNode))
+  //  {
+  //  widget = this->vrView(vtkMRMLVRViewNode::SafeDownCast(viewNode));
+  //  }
   return widget ? widget : q->mrmlViewFactory(
         QLatin1String(viewNode->GetClassName()))->viewWidget(
         vtkMRMLAbstractViewNode::SafeDownCast(viewNode));
@@ -444,6 +497,29 @@ void qMRMLLayoutManagerPrivate
     q->mrmlViewFactory("vtkMRMLViewNode")->activeRenderer());
   emit q->activeMRMLThreeDViewNodeChanged(
     vtkMRMLViewNode::SafeDownCast(node));
+}
+
+// --------------------------------------------------------------------------
+void qMRMLLayoutManagerPrivate::setActiveMRMLVRViewNode(vtkMRMLViewNode * node)
+{
+	Q_Q(qMRMLLayoutManager);
+	QObject::connect(q->mrmlViewFactory("vtkMRMLVRViewNode"),
+		SIGNAL(activeViewNodeChanged(vtkMRMLAbstractViewNode*)),
+		this, SLOT(onActiveVRViewNodeChanged(vtkMRMLAbstractViewNode*)),
+		Qt::UniqueConnection);
+
+	q->mrmlViewFactory("vtkMRMLVRViewNode")->setActiveViewNode(node);
+}
+
+// --------------------------------------------------------------------------
+void qMRMLLayoutManagerPrivate
+::onActiveVRViewNodeChanged(vtkMRMLAbstractViewNode * node)
+{
+	Q_Q(qMRMLLayoutManager);
+	emit q->activeThreeDRendererChanged(
+		q->mrmlViewFactory("vtkMRMLViewNode")->activeRenderer());
+	emit q->activeMRMLThreeDViewNodeChanged(
+		vtkMRMLViewNode::SafeDownCast(node));
 }
 
 // --------------------------------------------------------------------------
@@ -837,6 +913,12 @@ int qMRMLLayoutManager::threeDViewCount()const
 }
 
 //------------------------------------------------------------------------------
+int qMRMLLayoutManager::vrViewCount()const
+{
+	return this->mrmlViewFactory("vtkMRMLVRViewNode")->viewCount();
+}
+
+//------------------------------------------------------------------------------
 int qMRMLLayoutManager::chartViewCount()const
 {
   return this->mrmlViewFactory("vtkMRMLChartViewNode")->viewCount();
@@ -854,6 +936,13 @@ qMRMLThreeDWidget* qMRMLLayoutManager::threeDWidget(int id)const
   return qobject_cast<qMRMLThreeDWidget*>(
     this->mrmlViewFactory("vtkMRMLViewNode")->viewWidget(id));
 }
+
+//------------------------------------------------------------------------------
+//qMRMLVRView* qMRMLLayoutManager::vrView(int id)const
+//{
+//	return qobject_cast<qMRMLVRView*>(
+//		this->mrmlViewFactory("vtkMRMLVRViewNode")->viewWidget(id));
+//}
 
 //------------------------------------------------------------------------------
 qMRMLChartWidget* qMRMLLayoutManager::chartWidget(int id)const
@@ -963,6 +1052,13 @@ vtkMRMLViewNode* qMRMLLayoutManager::activeMRMLThreeDViewNode()const
 {
   return vtkMRMLViewNode::SafeDownCast(
     this->mrmlViewFactory("vtkMRMLViewNode")->activeViewNode());
+}
+
+//------------------------------------------------------------------------------
+vtkMRMLVRViewNode* qMRMLLayoutManager::activeMRMLVRViewNode()const
+{
+  return vtkMRMLVRViewNode::SafeDownCast(
+    this->mrmlViewFactory("vtkMRMLVRViewNode")->activeViewNode());
 }
 
 //------------------------------------------------------------------------------

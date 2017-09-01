@@ -235,6 +235,49 @@ const char* dual3DView =
   " </item>"
   "</layout>";
 
+const char* vr3DView =
+"<layout type=\"vertical\" split=\"true\" >"
+" <item>"
+"  <layout type=\"horizontal\">"
+"   <item>"
+"    <view class=\"vtkMRMLViewNode\" singletontag=\"1\">"
+"     <property name=\"viewlabel\" action=\"default\">1</property>"
+"    </view>"
+"   </item>"
+"   <item>"
+"    <view class=\"vtkMRMLVRViewNode\" singletontag=\"VR1\">"
+"     <property name=\"viewlabel\" action=\"default\">1</property>"
+"    </view>"
+"   </item>"
+"  </layout>"
+" </item>"
+" <item>"
+"  <layout type=\"horizontal\">"
+"   <item>"
+"    <view class=\"vtkMRMLSliceNode\" singletontag=\"Red\">"
+"     <property name=\"orientation\" action=\"default\">Axial</property>"
+"     <property name=\"viewlabel\" action=\"default\">R</property>"
+"     <property name=\"viewcolor\" action=\"default\">#F34A33</property>"
+"    </view>"
+"   </item>"
+"   <item>"
+"    <view class=\"vtkMRMLSliceNode\" singletontag=\"Yellow\">"
+"     <property name=\"orientation\" action=\"default\">Sagittal</property>"
+"     <property name=\"viewlabel\" action=\"default\">Y</property>"
+"     <property name=\"viewcolor\" action=\"default\">#EDD54C</property>"
+"    </view>"
+"   </item>"
+"   <item>"
+"    <view class=\"vtkMRMLSliceNode\" singletontag=\"Green\">"
+"     <property name=\"orientation\" action=\"default\">Coronal</property>"
+"     <property name=\"viewlabel\" action=\"default\">G</property>"
+"     <property name=\"viewcolor\" action=\"default\">#6EB04B</property>"
+"    </view>"
+"   </item>"
+"  </layout>"
+" </item>"
+"</layout>";
+
 const char* conventionalWidescreenView =
   "<layout type=\"horizontal\" split=\"true\" >"
   " <item>"
@@ -1406,6 +1449,8 @@ void vtkMRMLLayoutLogic::AddDefaultLayouts()
                                          fourOverFourView);
   this->LayoutNode->AddLayoutDescription(vtkMRMLLayoutNode::SlicerLayoutDual3DView,
                                          dual3DView);
+  this->LayoutNode->AddLayoutDescription(vtkMRMLLayoutNode::SlicerLayoutVR3DView,
+	  vr3DView);
   this->LayoutNode->AddLayoutDescription(vtkMRMLLayoutNode::SlicerLayoutConventionalWidescreenView,
                                          conventionalWidescreenView);
   this->LayoutNode->AddLayoutDescription(vtkMRMLLayoutNode::SlicerLayoutTriple3DEndoscopyView,
@@ -1700,7 +1745,7 @@ vtkCollection* vtkMRMLLayoutLogic::GetViewsFromAttributes(const ViewAttributes& 
         }
       if (nodes->GetNumberOfItems() > 1)
         {
-        vtkWarningMacro("Couldn't find node with SingletonTag: " << attributeValue );
+        vtkWarningMacro("Found several nodes with a similar SingletonTag: " << attributeValue );
         // Did not find the node, return an empty list to trigger the
         // calling method, CreateMissingViews(), to create the appropriate node.
         nodes->RemoveAllItems();

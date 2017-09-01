@@ -183,6 +183,8 @@ set(MRMLCore_SRCS
   vtkMRMLViewNode.cxx
   vtkMRMLVolumeArchetypeStorageNode.cxx
   vtkMRMLVolumeDisplayNode.cxx
+  vtkMRMLVRViewNode.cxx
+  vtkMRMLVRViewNode.h
   vtkMRMLGlyphableVolumeDisplayNode.cxx
   vtkMRMLGlyphableVolumeSliceDisplayNode.cxx
   vtkMRMLVolumeHeaderlessStorageNode.cxx

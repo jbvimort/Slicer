@@ -35,6 +35,7 @@ class qMRMLChartWidget;
 class qMRMLTableWidget;
 class qMRMLThreeDWidget;
 class qMRMLSliceWidget;
+// class qMRMLVRView;
 class qMRMLLayoutManagerPrivate;
 class qMRMLLayoutViewFactory;
 
@@ -47,6 +48,7 @@ class vtkMRMLChartViewNode;
 class vtkMRMLTableNode;
 class vtkMRMLTableViewNode;
 class vtkMRMLViewNode;
+class vtkMRMLVRViewNode;
 
 class vtkCollection;
 class vtkRenderer;
@@ -84,6 +86,7 @@ class QMRML_WIDGETS_EXPORT qMRMLLayoutManager : public ctkLayoutFactory
   // The following properties are exposed so that they are available within python
   Q_PROPERTY(int layout READ layout WRITE setLayout NOTIFY layoutChanged DESIGNABLE false)
   Q_PROPERTY(int threeDViewCount READ threeDViewCount DESIGNABLE false)
+  Q_PROPERTY(int vrViewCount READ vrViewCount DESIGNABLE false)
   Q_PROPERTY(int chartViewCount READ chartViewCount DESIGNABLE false)
   Q_PROPERTY(int tableViewCount READ tableViewCount DESIGNABLE false)
 
@@ -136,6 +139,7 @@ public:
 
   /// Return the number of instantiated ThreeDRenderView
   int threeDViewCount()const;
+  int vrViewCount()const;
   int chartViewCount()const;
   int tableViewCount()const;
 
@@ -144,6 +148,7 @@ public:
   /// of instantiated qMRMLThreeDView (that should also be equal to the number
   /// of vtkMRMLViewNode)
   Q_INVOKABLE qMRMLThreeDWidget* threeDWidget(int id)const;
+  // Q_INVOKABLE qMRMLVRView* vrView(int id)const;
   Q_INVOKABLE qMRMLChartWidget* chartWidget(int id)const;
   Q_INVOKABLE qMRMLTableWidget* tableWidget(int id)const;
 
@@ -168,6 +173,11 @@ public:
   /// \sa activeThreeDRenderer(), activeMRMLChartViewNode(),
   /// activeChartRenderer()
   Q_INVOKABLE vtkMRMLViewNode* activeMRMLThreeDViewNode()const;
+  /// Return the view node of the active VR view.
+  /// \todo For now the active view is the first 3D view.
+  /// \sa activeThreeDRenderer(), activeMRMLChartViewNode(),
+  /// activeChartRenderer()
+  Q_INVOKABLE vtkMRMLVRViewNode* activeMRMLVRViewNode()const;
   /// Return the renderer of the active 3D view.
   /// \todo For now the active view is the first 3D view.
   /// \sa  activeThreeDRenderer(), activeMRMLChartViewNode(),
@@ -217,11 +227,16 @@ public slots:
   void resetThreeDViews();
 
   /// Reset focal view around volumes
+  /// \sa ctkVTKRenderView::resetFocalPoint(), ctkVTKRenderView::resetCamera()
+  //void resetVRViews();
+
+  /// Reset focal view around volumes
   /// \sa qMRMLSliceControllerWidget::fitSliceToBackground(), vtkMRMLSliceLogic::FitSliceToAll()
   void resetSliceViews();
 
 signals:
   void activeMRMLThreeDViewNodeChanged(vtkMRMLViewNode * newActiveMRMLThreeDViewNode);
+  void activeMRMLVRViewNodeChanged(vtkMRMLViewNode * newActiveMRMLVRViewNode);
   void activeMRMLChartViewNodeChanged(vtkMRMLChartViewNode * newActiveMRMLChartViewNode);
   void activeMRMLTableViewNodeChanged(vtkMRMLTableViewNode * newActiveMRMLChartViewNode);
   void activeThreeDRendererChanged(vtkRenderer* newRenderer);

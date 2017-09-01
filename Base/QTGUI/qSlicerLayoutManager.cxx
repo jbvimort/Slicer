@@ -30,6 +30,7 @@
 
 // SlicerQt includes
 #include "qSlicerLayoutManager.h"
+#include "qMRMLVRView.h"
 #include "qSlicerApplication.h"
 #ifdef Slicer_USE_PYTHONQT_WITH_TCL
 #include "qSlicerPythonManager.h"
@@ -45,16 +46,58 @@
 // MRML includes
 #include <vtkMRMLSliceNode.h>
 #include <vtkMRMLSliceLogic.h>
+#include <vtkMRMLVRViewNode.h>
 
 // VTK includes
 #include <vtkInteractorObserver.h>
 #include <vtkCornerAnnotation.h>
 
+
+//------------------------------------------------------------------------------
+qMRMLLayoutVRViewFactory::qMRMLLayoutVRViewFactory(QObject* parent)
+  : qMRMLLayoutViewFactory(parent)
+{
+}
+
+//------------------------------------------------------------------------------
+QString qMRMLLayoutVRViewFactory::viewClassName()const
+{
+  return "vtkMRMLVRViewNode";
+}
+
+//------------------------------------------------------------------------------
+QWidget* qMRMLLayoutVRViewFactory
+::createViewFromNode(vtkMRMLAbstractViewNode* viewNode)
+{
+  if (!viewNode || !this->layoutManager() || !this->layoutManager()->viewport())
+  {
+    Q_ASSERT(viewNode);
+    return 0;
+  }
+
+  // There must be a unique VRWidget per node
+  Q_ASSERT(!this->viewWidget(viewNode));
+
+  qMRMLVRView* VRWidget = new qMRMLVRView(this->layoutManager()->viewport());
+  VRWidget->setObjectName(QString("VRWidget%1").arg(viewNode->GetLayoutLabel()));
+  //VRWidget->setViewLabel(viewNode->GetLayoutLabel());
+  VRWidget->setMRMLScene(this->mrmlScene());
+  vtkMRMLVRViewNode* vrViewNode = vtkMRMLVRViewNode::SafeDownCast(viewNode);
+  VRWidget->setMRMLVRViewNode(vrViewNode);
+  return VRWidget;
+}
+
 //-----------------------------------------------------------------------------
 class qSlicerLayoutManagerPrivate: public qMRMLLayoutManagerPrivate
 {
+  Q_DECLARE_PUBLIC(qSlicerLayoutManager);
 public:
   qSlicerLayoutManagerPrivate(qSlicerLayoutManager& object);
+  typedef qMRMLLayoutManagerPrivate Superclass;
+
+  void init();
+
+  qMRMLVRView* vrView(vtkMRMLVRViewNode* node)const;
 
 public:
   QString            ScriptedDisplayableManagerDirectory;
@@ -66,6 +109,24 @@ qSlicerLayoutManagerPrivate::qSlicerLayoutManagerPrivate(qSlicerLayoutManager& o
 {
 }
 
+// --------------------------------------------------------------------------
+void qSlicerLayoutManagerPrivate::init()
+{
+  this->Superclass::init();
+  Q_Q(qSlicerLayoutManager);
+  qMRMLLayoutVRViewFactory* vrViewFactory =
+   new qMRMLLayoutVRViewFactory;
+  q->registerViewFactory(vrViewFactory);
+}
+
+//------------------------------------------------------------------------------
+qMRMLVRView* qSlicerLayoutManagerPrivate::vrView(vtkMRMLVRViewNode* node)const
+{
+  Q_Q(const qMRMLLayoutManager);
+  return qobject_cast<qMRMLVRView*>(
+    q->mrmlViewFactory("vtkMRMLVRViewNode")->viewWidget(node));
+}
+
 //------------------------------------------------------------------------------
 // qSlicerLayoutManager methods
 
@@ -73,6 +134,8 @@ qSlicerLayoutManagerPrivate::qSlicerLayoutManagerPrivate(qSlicerLayoutManager& o
 qSlicerLayoutManager::qSlicerLayoutManager(QWidget* widget)
   : qMRMLLayoutManager(new qSlicerLayoutManagerPrivate(*this), widget, widget)
 {
+  Q_D(qSlicerLayoutManager);
+  d->init();
 }
 
 //------------------------------------------------------------------------------
@@ -112,4 +175,11 @@ void qSlicerLayoutManager::setScriptedDisplayableManagerDirectory(
 void qSlicerLayoutManager::setCurrentModule(const QString& moduleName)
 {
   emit this->selectModule(moduleName);
+}
+
+//------------------------------------------------------------------------------
+qMRMLVRView* qSlicerLayoutManager::vrView(int id)const
+{
+  return qobject_cast<qMRMLVRView*>(
+    this->mrmlViewFactory("vtkMRMLVRViewNode")->viewWidget(id));
 }

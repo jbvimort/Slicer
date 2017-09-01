@@ -101,6 +101,9 @@ set(KIT_SRCS
   vtkMRMLAbstractSliceViewDisplayableManager.cxx
   vtkMRMLSliceViewDisplayableManagerFactory.cxx
 
+  # VRView factory
+  vtkMRMLVRViewDisplayableManagerFactory.cxx
+
   vtkSliceViewInteractorStyle.cxx
   vtkThreeDViewInteractorStyle.cxx
 

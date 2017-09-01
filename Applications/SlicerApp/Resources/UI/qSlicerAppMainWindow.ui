@@ -73,6 +73,7 @@
      <addaction name="ViewLayoutFourUpAction"/>
      <addaction name="ViewLayoutFourUpQuantitativeAction"/>
      <addaction name="ViewLayoutFourUpTableAction"/>
+     <addaction name="ViewLayoutVR3DAction"/>
      <addaction name="ViewLayoutDual3DAction"/>
      <addaction name="ViewLayoutTriple3DAction"/>
      <addaction name="ViewLayoutOneUp3DAction"/>
@@ -256,6 +257,7 @@
    <addaction name="ViewLayoutFourUpAction"/>
    <addaction name="ViewLayoutFourUpQuantitativeAction"/>
    <addaction name="ViewLayoutFourUpTableAction"/>
+   <addaction name="ViewLayoutVR3DAction"/>
    <addaction name="ViewLayoutDual3DAction"/>
    <addaction name="ViewLayoutTriple3DAction"/>
    <addaction name="ViewLayoutOneUp3DAction"/>
@@ -793,6 +795,19 @@
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
+  </action>
+  <action name="ViewLayoutVR3DAction">
+    <property name="icon">
+      <iconset resource="../../../../Libs/MRML/Widgets/Resources/qMRMLWidgets.qrc">
+        <normaloff>:/Icons/LayoutDual3DView.png</normaloff>:/Icons/LayoutDual3DView.png
+      </iconset>
+    </property>
+    <property name="text">
+      <string>VR 3D</string>
+    </property>
+    <property name="iconVisibleInMenu">
+      <bool>true</bool>
+    </property>
   </action>
   <action name="ViewLayoutDual3DAction">
    <property name="icon">

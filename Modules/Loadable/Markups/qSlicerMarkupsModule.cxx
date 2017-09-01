@@ -24,6 +24,7 @@
 // MRMLDisplayableManager includes
 #include <vtkMRMLSliceViewDisplayableManagerFactory.h>
 #include <vtkMRMLThreeDViewDisplayableManagerFactory.h>
+#include <vtkMRMLVRViewDisplayableManagerFactory.h>
 
 // QTGUI includes
 #include <qSlicerApplication.h>
@@ -126,7 +127,13 @@ void qSlicerMarkupsModule::setup()
 
   // Register displayable managers
   // 3D
-  vtkMRMLThreeDViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager("vtkMRMLMarkupsFiducialDisplayableManager3D");
+  foreach(const QString& displayableManager, QStringList()
+    << "vtkMRMLMarkupsFiducialDisplayableManager3D"
+  )
+    {
+    vtkMRMLThreeDViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager(displayableManager.toLatin1());
+    vtkMRMLVRViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager(displayableManager.toLatin1());
+    }
   // 2D
   vtkMRMLSliceViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager("vtkMRMLMarkupsFiducialDisplayableManager2D");
 

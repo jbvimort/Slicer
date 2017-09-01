@@ -224,6 +224,9 @@ set(MRMLWidgets_SRCS
   qMRMLVolumeThresholdWidget.h
   qMRMLVolumeWidget.cxx
   qMRMLVolumeWidget.h
+  #qMRMLVRView.cxx
+  #qMRMLVRView.h
+  #qMRMLVRView_p.h
   qMRMLExpandingWebView.cxx
   qMRMLExpandingWebView.h
   qMRMLExpandingWebView_p.h
@@ -321,6 +324,8 @@ set(MRMLWidgets_MOC_SRCS
   qMRMLVolumeThresholdWidget.h
   qMRMLVolumeWidget.h
   qMRMLVolumeWidget_p.h
+  #qMRMLVRView.h
+  #qMRMLVRView_p.h
   qMRMLExpandingWebView.h
   qMRMLExpandingWebView_p.h
   qMRMLWidget.h
@@ -458,6 +463,11 @@ set(MRMLWidgets_LIBRARIES
 list(APPEND MRMLWidgets_LIBRARIES
   vtkRenderingQt
   )
+if(Slicer_USE_OpenVR)
+  list(APPEND MRMLWidgets_LIBRARIES
+    vtkRenderingOpenVR
+    )
+endif()
 
 
 target_link_libraries(${lib_name} ${MRMLWidgets_LIBRARIES})
