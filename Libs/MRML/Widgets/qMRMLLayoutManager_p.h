@@ -60,7 +60,6 @@ class qMRMLTableView;
 class qMRMLTableWidget;
 class qMRMLThreeDView;
 class qMRMLThreeDWidget;
-class qMRMLVRView;
 class vtkCollection;
 class vtkObject;
 class vtkMRMLLayoutLogic;
@@ -68,7 +67,6 @@ class vtkMRMLLayoutNode;
 class vtkMRMLChartViewNode;
 class vtkMRMLTableViewNode;
 class vtkMRMLViewNode;
-class vtkMRMLVRViewNode;
 class vtkMRMLSliceNode;
 class vtkXMLDataElement;
 
@@ -90,7 +88,6 @@ public:
 
   void setMRMLLayoutNode(vtkMRMLLayoutNode* node);
   void setActiveMRMLThreeDViewNode(vtkMRMLViewNode * node);
-  void setActiveMRMLVRViewNode(vtkMRMLViewNode * node);
   void setActiveMRMLChartViewNode(vtkMRMLChartViewNode * node);
   void setActiveMRMLTableViewNode(vtkMRMLTableViewNode * node);
 
@@ -108,7 +105,6 @@ public:
   /// Convenient function allowing to get a reference to the renderView widget
   /// identified by \a renderViewName.
   qMRMLThreeDWidget* threeDWidget(vtkMRMLViewNode* node)const;
-  //qMRMLVRView* vrView(vtkMRMLVRViewNode* node)const;
   qMRMLChartWidget* chartWidget(vtkMRMLChartViewNode* node)const;
   qMRMLTableWidget* tableWidget(vtkMRMLTableViewNode* node)const;
 
@@ -132,7 +128,6 @@ public slots:
   void updateLayoutFromMRMLScene();
 
   void onActiveThreeDViewNodeChanged(vtkMRMLAbstractViewNode*);
-  void onActiveVRViewNodeChanged(vtkMRMLAbstractViewNode*);
   void onActiveChartViewNodeChanged(vtkMRMLAbstractViewNode*);
   void onActiveTableViewNodeChanged(vtkMRMLAbstractViewNode*);
 
@@ -146,7 +141,6 @@ public:
   vtkMRMLLayoutNode*      MRMLLayoutNode;
   vtkMRMLLayoutLogic*     MRMLLayoutLogic;
   vtkMRMLViewNode*        ActiveMRMLThreeDViewNode;
-  vtkMRMLVRViewNode*      ActiveMRMLVRViewNode;
   vtkMRMLChartViewNode*   ActiveMRMLChartViewNode;
   vtkMRMLTableViewNode*   ActiveMRMLTableViewNode;
 protected:
@@ -167,21 +161,6 @@ public:
 protected:
   virtual QWidget* createViewFromNode(vtkMRMLAbstractViewNode* viewNode);
 };
-
-////------------------------------------------------------------------------------
-//class QMRML_WIDGETS_EXPORT qMRMLLayoutVRViewFactory
-//	: public qMRMLLayoutViewFactory
-//{
-//	Q_OBJECT
-//public:
-//	typedef qMRMLLayoutViewFactory Superclass;
-//	qMRMLLayoutVRViewFactory(QObject* parent = 0);
-//
-//	virtual QString viewClassName()const;
-//
-//protected:
-//	virtual QWidget* createViewFromNode(vtkMRMLAbstractViewNode* viewNode);
-//};
 
 //------------------------------------------------------------------------------
 class QMRML_WIDGETS_EXPORT qMRMLLayoutChartViewFactory

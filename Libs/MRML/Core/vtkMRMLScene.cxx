@@ -59,7 +59,6 @@ Version:   $Revision: 1.18 $
 #include "vtkMRMLTransformStorageNode.h"
 #include "vtkMRMLVectorVolumeDisplayNode.h"
 #include "vtkMRMLViewNode.h"
-#include "vtkMRMLVRViewNode.h"
 #include "vtkMRMLVolumeArchetypeStorageNode.h"
 #include "vtkURIHandler.h"
 #include "vtkMRMLLayoutNode.h"
@@ -192,7 +191,6 @@ vtkMRMLScene::vtkMRMLScene()
   this->RegisterNodeClass( vtkSmartPointer< vtkMRMLDiffusionTensorDisplayPropertiesNode >::New() );
   this->RegisterNodeClass( vtkSmartPointer< vtkMRMLCameraNode >::New() );
   this->RegisterNodeClass( vtkSmartPointer< vtkMRMLViewNode >::New() );
-  this->RegisterNodeClass( vtkSmartPointer< vtkMRMLVRViewNode >::New() );
   this->RegisterNodeClass( vtkSmartPointer< vtkMRMLLayoutNode >::New() );
   this->RegisterNodeClass( vtkSmartPointer< vtkMRMLHierarchyNode >::New() );
   this->RegisterNodeClass( vtkSmartPointer< vtkMRMLHierarchyStorageNode >::New() );

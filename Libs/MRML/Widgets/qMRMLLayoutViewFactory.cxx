@@ -204,7 +204,8 @@ bool qMRMLLayoutViewFactory::isElementSupported(QDomElement layoutElement)const
 // --------------------------------------------------------------------------
 bool qMRMLLayoutViewFactory::isViewNodeSupported(vtkMRMLAbstractViewNode* viewNode)const
 {
-  return viewNode && strcmp(viewNode->GetClassName(), this->viewClassName().toLatin1()) == 0;  // viewNode->IsA(this->viewClassName().toLatin1());
+  return viewNode && viewNode->IsA(this->viewClassName().toLatin1());
+  //return viewNode && strcmp(viewNode->GetClassName(), this->viewClassName().toLatin1()) == 0;  // viewNode->IsA(this->viewClassName().toLatin1());
 }
 
 // --------------------------------------------------------------------------

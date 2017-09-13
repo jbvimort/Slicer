@@ -26,7 +26,7 @@
 #include "vtkSlicerTransformLogic.h"
 #include "vtkMRMLSliceViewDisplayableManagerFactory.h"
 #include "vtkMRMLThreeDViewDisplayableManagerFactory.h"
-#include "vtkMRMLVRViewDisplayableManagerFactory.h"
+//#include "vtkMRMLVRViewDisplayableManagerFactory.h"
 
 // Transforms includes
 #include "qSlicerTransformsModule.h"
@@ -166,7 +166,7 @@ void qSlicerTransformsModule::setup()
   )
     {
     vtkMRMLThreeDViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager(displayableManager.toLatin1());
-    vtkMRMLVRViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager(displayableManager.toLatin1());
+//    vtkMRMLVRViewDisplayableManagerFactory::GetInstance()->RegisterDisplayableManager(displayableManager.toLatin1());
     }
 
   // Register Subject Hierarchy core plugins

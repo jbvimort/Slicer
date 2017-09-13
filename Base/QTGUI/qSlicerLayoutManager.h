@@ -26,27 +26,9 @@
 
 // MRMLWidgets includes
 #include <qMRMLLayoutManager.h>
-#include <qMRMLLayoutViewFactory.h>
 
-class qMRMLVRView;
 class qSlicerLayoutManagerPrivate;
 
-//------------------------------------------------------------------------------
-class Q_SLICER_BASE_QTGUI_EXPORT qMRMLLayoutVRViewFactory
-  : public qMRMLLayoutViewFactory
-{
-  Q_OBJECT
-public:
-  typedef qMRMLLayoutViewFactory Superclass;
-  qMRMLLayoutVRViewFactory(QObject* parent = 0);
-
-  virtual QString viewClassName()const;
-
-protected:
-  virtual QWidget* createViewFromNode(vtkMRMLAbstractViewNode* viewNode);
-};
-
-//------------------------------------------------------------------------------
 class Q_SLICER_BASE_QTGUI_EXPORT qSlicerLayoutManager : public qMRMLLayoutManager
 {
   Q_OBJECT
@@ -59,8 +41,6 @@ public:
   Q_INVOKABLE void setScriptedDisplayableManagerDirectory(const QString& scriptedDisplayableManagerDirectory);
 
   void setCurrentModule(const QString& moduleName);
-
-  Q_INVOKABLE qMRMLVRView* vrView(int id)const;
 
 signals:
   void selectModule(const QString& moduleName);
