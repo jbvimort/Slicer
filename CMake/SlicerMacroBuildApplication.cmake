@@ -39,7 +39,7 @@ macro(slicerMacroBuildAppLibrary)
     INCLUDE_DIRECTORIES
     TARGET_LIBRARIES
     )
-  CMAKE_PARSE_ARGUMENTS(SLICERAPPLIB
+  cmake_parse_arguments(SLICERAPPLIB
     "${options}"
     "${oneValueArgs}"
     "${multiValueArgs}"
@@ -150,7 +150,7 @@ macro(slicerMacroBuildAppLibrary)
     QT4_WRAP_UI(SLICERAPPLIB_UI_CXX ${SLICERAPPLIB_UI_SRCS})
     if(DEFINED SLICERAPPLIB_RESOURCES)
       QT4_ADD_RESOURCES(SLICERAPPLIB_QRC_SRCS ${SLICERAPPLIB_RESOURCES})
-    endif(DEFINED SLICERAPPLIB_RESOURCES)
+    endif()
   else()
     set(_moc_options OPTIONS -DSlicer_HAVE_QT5)
     if(Slicer_HAVE_WEBKIT_SUPPORT)
@@ -160,7 +160,7 @@ macro(slicerMacroBuildAppLibrary)
     QT5_WRAP_UI(SLICERAPPLIB_UI_CXX ${SLICERAPPLIB_UI_SRCS})
     if(DEFINED SLICERAPPLIB_RESOURCES)
       QT5_ADD_RESOURCES(SLICERAPPLIB_QRC_SRCS ${SLICERAPPLIB_RESOURCES})
-    endif(DEFINED SLICERAPPLIB_RESOURCES)
+    endif()
   endif()
 
   set_source_files_properties(
@@ -304,7 +304,7 @@ macro(slicerMacroBuildApplication)
     INCLUDE_DIRECTORIES
     TARGET_LIBRARIES
     )
-  CMAKE_PARSE_ARGUMENTS(SLICERAPP
+  cmake_parse_arguments(SLICERAPP
     "${options}"
     "${oneValueArgs}"
     "${multiValueArgs}"
@@ -386,7 +386,7 @@ macro(slicerMacroBuildApplication)
     get_filename_component(apple_icon_filename ${SLICERAPP_APPLE_ICON_FILE} NAME)
     set(MACOSX_BUNDLE_ICON_FILE ${apple_icon_filename})
     message(STATUS "Setting MACOSX_BUNDLE_ICON_FILE to '${MACOSX_BUNDLE_ICON_FILE}'")
-  endif(Q_WS_MAC)
+  endif()
 
   if(QT_MAC_USE_COCOA)
     get_filename_component(qt_menu_nib
@@ -403,9 +403,9 @@ macro(slicerMacroBuildApplication)
       PROPERTIES
       MACOSX_PACKAGE_LOCATION Resources/qt_menu.nib
       )
-  else(QT_MAC_USE_COCOA)
+  else()
     set(qt_menu_nib_sources)
-  endif(QT_MAC_USE_COCOA)
+  endif()
 
   # --------------------------------------------------------------------------
   # Include dirs
@@ -556,8 +556,8 @@ macro(slicerMacroBuildApplication)
         set(VisualStudio_EXECUTABLE ${CMAKE_VS_DEVENV_COMMAND})
         set(VisualStudio_HELP "Open Visual Studio with Slicer's DLL paths set up")
         set(VisualStudioProject_EXECUTABLE ${CMAKE_VS_DEVENV_COMMAND})
-        set(VisualStudioProject_ARGUMENTS ${Slicer_BINARY_DIR}/${Slicer_MAIN_PROJECT_APPLICATION_NAME}.sln)
-        set(VisualStudioProject_HELP "Open Visual Studio ${Slicer_MAIN_PROJECT_APPLICATION_NAME} project with Slicer's DLL paths set up")
+        set(VisualStudioProject_ARGUMENTS ${Slicer_BINARY_DIR}/Slicer.sln)
+        set(VisualStudioProject_HELP "Open Visual Studio Slicer project with Slicer's DLL paths set up")
         set(cmd_ARGUMENTS "/c start cmd")
       endif()
       foreach(executable ${executables})
