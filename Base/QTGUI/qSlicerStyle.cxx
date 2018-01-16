@@ -20,7 +20,11 @@
 
 // Qt includes
 #include <QAbstractScrollArea>
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
 #include <QCleanlooksStyle>
+#else
+#include <QStyleFactory>
+#endif
 #include <QDebug>
 #include <QEvent>
 #include <QGroupBox>
@@ -35,7 +39,11 @@
 
 // --------------------------------------------------------------------------
 qSlicerStyle::qSlicerStyle()
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
   : Superclass(new QCleanlooksStyle)
+#else
+  : Superclass(QStyleFactory::create("fusion"))
+#endif
 {
   this->baseStyle()->setParent(this);
 }
@@ -285,6 +293,13 @@ int qSlicerStyle::styleHint(StyleHint hint, const QStyleOption *opt, const QWidg
         res = widget->property("SH_ItemView_ActivateItemOnSingleClick").toBool();
         break;
         }
+    // Overload the SH_ComboBox_Popup option to prevent issue with checkable
+    // combobox. For more details see: https://bugreports.qt.io/browse/QTBUG-19683
+    case QStyle::SH_ComboBox_Popup:
+      {
+      res = 0;
+      break;
+      }
     default:
       res = this->Superclass::styleHint(hint, opt, widget, returnData);
     }

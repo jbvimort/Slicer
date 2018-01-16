@@ -354,7 +354,6 @@ void qMRMLPlotViewControllerWidgetPrivate::onPlotTypeChanged(const QString &Type
 // --------------------------------------------------------------------------
 void qMRMLPlotViewControllerWidgetPrivate::onXAxisChanged(const QString &Column)
 {
-  Q_Q(qMRMLPlotViewControllerWidget);
   if (!this->PlotChartNode)
     {
     return;
@@ -905,8 +904,8 @@ void qMRMLPlotViewControllerWidget::updateWidgetFromMRML()
       }
     }
 
-  // Update selected PlotDataNodes Markers if Type is Line
-  if (strcmp("Custom", markers))
+  // Update selected PlotDataNodes Markers if Type is non-custom
+  if (markers!=NULL && strcmp("Custom", markers))
     {
     it = plotDataNodesIDs.begin();
     for (; it != plotDataNodesIDs.end(); ++it)
